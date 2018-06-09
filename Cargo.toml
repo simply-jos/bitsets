@@ -1,0 +1,6 @@
+[package]
+name = "dense-bitset"
+version = "0.1.0"
+authors = ["Arthur Maciejewicz <arthur.maciejewicz@gmail.com>"]
+
+[dependencies]
