@@ -422,4 +422,15 @@ mod tests {
 
         assert_eq!(bits, C);
     }
+
+    #[test]
+    fn can_not_bits() {
+
+        let mut bs = DenseBitSet::from_bits(0b11100011101);
+        let sb = DenseBitSet::from_bits(0b1111111111111111111111111111111111111111111111111111100011100010);
+
+        bs.inplace_not();
+
+        assert_eq!(sb, bs);
+    }
 }
