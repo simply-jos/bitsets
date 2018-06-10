@@ -401,4 +401,16 @@ mod tests {
 
         assert_eq!(bits, C);
     }
+
+    #[test]
+    fn can_xor_bits() {
+
+        let A = DenseBitSet::from_bits(0b11100010101);
+        let B = DenseBitSet::from_bits(0b11110100100);
+        let C = A.xor(&B);
+
+        let bits = DenseBitSet::from_bits(0b00010110001);
+
+        assert_eq!(bits, C);
+    }
 }
