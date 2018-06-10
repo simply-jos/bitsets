@@ -92,6 +92,22 @@ impl DenseBitSet {
     /// assert!(bs.test(3));
     /// ```
     pub fn with_capacity(num_bits: usize) -> DenseBitSet {
+        DenseBitSet::with_capacity_and_state(num_bits, 0)
+    }
+
+
+    /// Creates a `DenseBitSet` that can contain _at least_ `num_bits` bits
+    /// each word of the underlying storage is initialized to `initial_state`.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use bitsets::DenseBitSet;
+    /// 
+    /// let bs1 = DenseBitSet::with_capacity_and_state(128, std::usize::MAX);
+    /// let bs2 = DenseBitSet::with_capacity_and_state(128, 0);
+    /// ```
+    pub fn with_capacity_and_state(num_bits: usize, initial_state: usize) -> DenseBitSet {
         let full_words = num_bits / BITS_PER_WORD;
         let remaining_bits = num_bits % BITS_PER_WORD;
         let words_to_allocate;
@@ -102,7 +118,7 @@ impl DenseBitSet {
         }
 
         DenseBitSet {
-            bits: vec![0; words_to_allocate],
+            bits: vec![initial_state; words_to_allocate],
             num_bits: words_to_allocate * BITS_PER_WORD,
         }
     }
