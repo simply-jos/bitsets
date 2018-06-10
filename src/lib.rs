@@ -133,10 +133,13 @@ impl DenseBitSet {
     ///
     /// # Examples
     /// 
+    /// ```
+    /// use bitsets::DenseBitSet;
     /// let bs = DenseBitSet::from_bits(0b0101010101010101);
     /// 
     /// assert!(bs.test(0));
-    /// assert!(bs.test(1));
+    /// assert!(!bs.test(1));
+    /// ```
     pub fn from_bits(bit_pattern: usize) -> DenseBitSet {
         DenseBitSet::with_capacity_and_state(BITS_PER_WORD, bit_pattern)
     }
