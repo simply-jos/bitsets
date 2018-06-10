@@ -230,15 +230,6 @@ impl DenseBitSet {
         }
     }
 
-    /**
-     * 
-     * Combining functions
-     * 
-     * The following methods take another bitset,
-     * and merge the two together
-     * 
-     */
-
     /// In-place bitwise-and with `other`
     pub fn inplace_and(&mut self, other: &DenseBitSet) {
         assert!(self.words() == other.words());
@@ -297,14 +288,6 @@ impl DenseBitSet {
     /// returns the number of bits this set can accommodate
     pub fn len(&self) -> usize {
         self.num_bits
-    }
-
-    /// prints the bitset to STDOUT
-    pub fn print(&self) {
-        for i in 0..self.len() {
-            print!("{}", if self.test(i) { 1 } else { 0 });
-        }
-        println!("");
     }
 }
 
@@ -369,7 +352,6 @@ mod tests {
 
         // 1010101110101110101010101010000000000000000000000000000000000000
         let bs = DenseBitSet::from_bits(0b0101010101010111010111010101);
-        bs.print();
         assert!(bs.test(0));
         assert!(!bs.test(1));
         assert!(bs.test(2));
