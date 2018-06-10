@@ -2,4 +2,5 @@
 
 Various heap-allocated bitset implementations in Rust.
 
-We provide a dense bitmap, with planned memory-mapped, EWAH, and roaring implementations later on.
+At the moment, we only provide a dense bitmap. In the future, we plan to
+also include memory-mapped, compressed, and roaring implementations.
