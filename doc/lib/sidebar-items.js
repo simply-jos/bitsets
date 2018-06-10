@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["DenseBitSet","A dense bit set implemented over Vec "]]});

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//! A dense bit set implemented over Vec<usize>
+//! A dense bit set implemented over `std::Vec`
 //!
 //! # Examples
 //! 
@@ -63,7 +63,7 @@ fn get_bitmask(pos: usize) -> usize {
     1 << get_bit_offset(pos)
 }
 
-/// A dense bit set implemented over Vec<usize> 
+/// A dense bit set implemented over `std::Vec<usize>`
 #[derive(Clone, Eq, PartialEq)]
 pub struct DenseBitSet {
     num_bits: usize,
@@ -72,7 +72,9 @@ pub struct DenseBitSet {
 
 
 impl DenseBitSet {
-    /// Creates a `DenseBitSet` that can contain _at least_ num_bits bits
+    /// Creates a `DenseBitSet` that can contain at least `num_bits` bits.
+    /// This will be rounded to the nearest word size that can accomodate
+    /// `num_bits` bits.
     /// 
     /// # Examples
     /// 
@@ -96,16 +98,19 @@ impl DenseBitSet {
     }
 
 
-    /// Creates a `DenseBitSet` that can contain _at least_ `num_bits` bits
-    /// each word of the underlying storage is initialized to `initial_state`.
+    /// Creates a `DenseBitSet` that can contain at least `num_bits` bits.
+    /// Each word of the underlying storage is initialized to `initial_state`.
     /// 
     /// # Examples
     /// 
     /// ```
     /// use bitsets::DenseBitSet;
     /// 
-    /// let bs1 = DenseBitSet::with_capacity_and_state(128, std::usize::MAX);
-    /// let bs2 = DenseBitSet::with_capacity_and_state(128, 0);
+    /// // 11111111111111111111111111111111111111111111111111111111
+    /// let bs1 = DenseBitSet::with_capacity_and_state(64, std::usize::MAX);
+    ///
+    /// // 00000000000000000000000000000000000000000000000000000000
+    /// let bs2 = DenseBitSet::with_capacity_and_state(64, 0);
     /// ```
     pub fn with_capacity_and_state(num_bits: usize, initial_state: usize) -> DenseBitSet {
         let full_words = num_bits / BITS_PER_WORD;
@@ -123,8 +128,40 @@ impl DenseBitSet {
         }
     }
 
-    /// Sets the ith bit
-    /// returns true if bit was not set previously
+    /// Tests whether the ith bit is set
+    /// Returns true if is set, else false
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use bitsets::DenseBitSet;
+    /// 
+    /// let bs = DenseBitSet::with_capacity(64);
+    /// assert!(!bs.test(16));
+    /// ```
+    pub fn test(&self, i: usize) -> bool {
+        (self.bits[get_word_offset(i)] & get_bitmask(i)) != 0
+    }
+
+    /// Sets the ith bit.
+    /// Returns true if bit was not set previously
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use bitsets::DenseBitSet;
+    /// 
+    /// let mut bs = DenseBitSet::with_capacity(64);
+    /// 
+    /// let is_present = bs.test(32);
+    /// assert!(!is_present);
+    /// 
+    /// let first_time_set = bs.set(32);
+    /// assert!(first_time_set);
+    /// 
+    /// let is_present = bs.test(32);
+    /// assert!(is_present);
+    /// ```
     pub fn set(&mut self, i: usize) -> bool {
         let idx = get_word_offset(i);
         let prior = self.bits[idx];
@@ -134,33 +171,31 @@ impl DenseBitSet {
         (prior & bitmask) == 0
     }
 
-    /// Tests whether the ith bit is set
-    /// Returns true if is set, else false
-    pub fn test(&self, i: usize) -> bool {
-        (self.bits[get_word_offset(i)] & get_bitmask(i)) != 0
-    }
-
     /// flips the value of the ith bit
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use bitsets::DenseBitSet;
+    /// 
+    /// let mut bs = DenseBitSet::with_capacity(64);
+    /// 
+    /// assert!(!bs.test(16));
+    /// assert!(!bs.test(24));
+    /// bs.set(46);
+    /// assert!(bs.test(46));
+    /// 
+    /// bs.flip(14);
+    /// bs.flip(24);
+    /// bs.flip(46);
+    /// 
+    /// assert!(bs.test(14));
+    /// assert!(bs.test(24));
+    /// assert!(!bs.test(46));
+    /// 
+    /// ```
     pub fn flip(&mut self, i: usize) {
         self.bits[get_word_offset(i)] ^= get_bitmask(i)
-    }
-
-    /// returns the number of elements in the underlying Vec<usize>
-    pub fn words(&self) -> usize {
-        self.bits.len()
-    }
-
-    /// returns the number of bits this set can accommodate
-    pub fn len(&self) -> usize {
-        self.num_bits
-    }
-
-    /// prints the bitset to STDOUT
-    pub fn print(&self) {
-        for i in 0..self.len() {
-            print!("{}", if self.test(i) { 1 } else { 0 });
-        }
-        println!("");
     }
 
     /// In-place bitwise-not
@@ -227,6 +262,24 @@ impl DenseBitSet {
         let mut output = self.clone();
         output.inplace_xor(other);
         output
+    }
+
+    /// returns the number of elements in the underlying Vec<usize>
+    pub fn words(&self) -> usize {
+        self.bits.len()
+    }
+
+    /// returns the number of bits this set can accommodate
+    pub fn len(&self) -> usize {
+        self.num_bits
+    }
+
+    /// prints the bitset to STDOUT
+    pub fn print(&self) {
+        for i in 0..self.len() {
+            print!("{}", if self.test(i) { 1 } else { 0 });
+        }
+        println!("");
     }
 }
 
