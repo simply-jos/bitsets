@@ -352,4 +352,17 @@ mod tests {
         assert!(!bs.test(3));
         assert!(bs.test(4));
     }
+
+    #[test]
+    fn can_compare() {
+        let A = DenseBitSet::from_bits(0b111000111);
+        let B = DenseBitSet::from_bits(0b111000111);
+        let C = DenseBitSet::from_bits(0b110111111);
+
+        assert!(A == B);
+        assert!(B == A);
+        
+        assert!(A != C);
+        assert!(C != A);
+    }
 }
