@@ -1,5 +1,5 @@
 [package]
-name = "dense-bitset"
+name = "bitsets"
 version = "0.1.0"
 authors = ["Arthur Maciejewicz <arthur.maciejewicz@gmail.com>"]
 
