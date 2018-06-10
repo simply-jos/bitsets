@@ -2,5 +2,12 @@
 name = "bitsets"
 version = "0.1.0"
 authors = ["Arthur Maciejewicz <arthur.maciejewicz@gmail.com>"]
+license = "MIT"
+keywords = ["bitset", "bitmap", "bit set", "bit map", "dense"]
+categories = ["data-structures", ]
 
-[dependencies]
+description = "BitSet implementations: Dense, Compressed, Memory-Mapped, and Roaring."
+documentation = "https://docs.rs/bitsets"
+homepage = "https://github.com/Zintinio/bitsets"
+repository = "https://github.com/Zintinio/bitsets"
+readme = "README.md"
