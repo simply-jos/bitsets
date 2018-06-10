@@ -353,7 +353,7 @@ mod tests {
     }
 
     #[test]
-    fn dummpt() {
+    fn can_initialize_from_literal() {
 
         // 1010101110101110101010101010000000000000000000000000000000000000
         let bs = DenseBitSet::from_bits(0b0101010101010111010111010101);
@@ -386,6 +386,19 @@ mod tests {
         let C = A.or(&B);
 
         let bits = DenseBitSet::from_bits(0b1010110101);
+
+        assert_eq!(bits, C);
+    }
+
+    #[test]
+    fn can_intersect_bits() {
+
+        let A = DenseBitSet::from_bits(0b1000110001);
+        let B = DenseBitSet::from_bits(0b1010100100);
+        let C = A.and(&B);
+
+        let bits = DenseBitSet::from_bits(0b1000100000);
+
         assert_eq!(bits, C);
     }
 }
