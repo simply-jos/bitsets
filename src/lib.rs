@@ -128,6 +128,18 @@ impl DenseBitSet {
         }
     }
 
+    /// creates a single-word sized DenseBitSet initialized to `bit_pattern`.
+    ///
+    /// # Examples
+    /// 
+    /// let bs = DenseBitSet::from_bits(0b0101010101010101);
+    /// 
+    /// assert!(bs.test(0));
+    /// assert!(bs.test(1));
+    pub fn from_bits(bit_pattern: usize) -> DenseBitSet {
+        DenseBitSet::with_capacity_and_state(BITS_PER_WORD, bit_pattern)
+    }
+
     /// Tests whether the ith bit is set
     /// Returns true if is set, else false
     /// 
@@ -326,5 +338,18 @@ mod tests {
 
         bs.flip(45);
         assert_eq!(bs.test(45), false);
+    }
+
+    #[test]
+    fn dummpt() {
+
+        // 1010101110101110101010101010000000000000000000000000000000000000
+        let bs = DenseBitSet::from_bits(0b0101010101010111010111010101);
+        bs.print();
+        assert!(bs.test(0));
+        assert!(!bs.test(1));
+        assert!(bs.test(2));
+        assert!(!bs.test(3));
+        assert!(bs.test(4));
     }
 }
