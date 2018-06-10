@@ -43,6 +43,7 @@
 
 
 use std::mem;
+use std::fmt;
 
 const BITS_PER_BYTE: usize = 8;
 const BYTES_PER_WORD: usize = mem::size_of::<usize>();
@@ -295,6 +296,17 @@ impl DenseBitSet {
     }
 }
 
+impl fmt::Debug for DenseBitSet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // write!(f, "DenseBitSet {{ x: {}, y: {} }}", self.x, self.y)
+        let mut res = write!(f, "DenseBitset: ");
+        for i in 0..self.len() {
+            res = write!(f, "{}", if self.test(i) { 1 } else { 0 });
+        }
+        res
+    }
+}
+
 // DenseBitSet TESTS
 mod tests {
     
@@ -361,8 +373,19 @@ mod tests {
 
         assert!(A == B);
         assert!(B == A);
-        
+
         assert!(A != C);
         assert!(C != A);
+    }
+
+    #[test]
+    fn can_union_bits() {
+
+        let A = DenseBitSet::from_bits(0b1000110001);
+        let B = DenseBitSet::from_bits(0b0010000100);
+        let C = A.or(&B);
+
+        let bits = DenseBitSet::from_bits(0b1010110101);
+        assert_eq!(bits, C);
     }
 }
