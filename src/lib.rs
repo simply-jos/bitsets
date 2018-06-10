@@ -141,6 +141,15 @@ impl DenseBitSet {
         DenseBitSet::with_capacity_and_state(BITS_PER_WORD, bit_pattern)
     }
 
+    /// Creates a DenseBitSet using the given Vec as the
+    /// underlying bits.
+    pub fn from_vec(v: Vec<usize>) -> DenseBitSet {
+        DenseBitSet {
+            num_bits: BITS_PER_WORD * v.len(),
+            bits: v,
+        }
+    }
+
     /// Tests whether the ith bit is set
     /// Returns true if is set, else false
     /// 
