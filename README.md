@@ -2,5 +2,16 @@
 
 Various heap-allocated bitset implementations in Rust.
 
-At the moment, we only provide a dense bitmap. In the future, we plan to
-also include memory-mapped, compressed, and roaring implementations.
+At the moment we provide a `DenseBitSet` datastructure, and plan to provide compressed and memory-mapped
+bitsets in the near future.
+
+## Usage
+
+```
+use bitsets::DenseBitSet;
+
+let A = DenseBitSet::from_bits(0b1001100000100010);
+let B = DenseBitSet::from_bits(0b1001100000100010);
+let C = A.or(&B);
+```
+
