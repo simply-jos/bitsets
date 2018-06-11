@@ -7,7 +7,7 @@ bitsets in the near future.
 
 ## Usage
 
-```
+```rust
 use bitsets::DenseBitSet;
 
 let A = DenseBitSet::from_bits(0b1001100000100010);
