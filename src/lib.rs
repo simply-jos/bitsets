@@ -44,6 +44,7 @@
 
 use std::mem;
 use std::fmt;
+use std::iter::{ ExactSizeIterator, Iterator };
 
 const BITS_PER_BYTE: usize = 8;
 const BYTES_PER_WORD: usize = mem::size_of::<usize>();
@@ -302,6 +303,49 @@ impl fmt::Debug for DenseBitSet {
     }
 }
 
+/// An iterator for DenseBitSet
+/// Allows the caller to iterate over each bit as a bool
+#[derive(Clone, Eq, PartialEq)]
+pub struct DenseBitIterator<'a> {
+    collection: &'a DenseBitSet,
+    index: usize
+}
+
+impl<'a> Iterator for DenseBitIterator<'a> {
+    type Item = bool;
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index < self.collection.len() {
+            let result = self.collection.test(self.index);
+            self.index += 1;
+
+            Some(result)
+        } else {
+            None
+        }
+    }
+}
+
+impl<'a> ExactSizeIterator for DenseBitIterator<'a> {
+    /// The size of the bitset is known at the time of creation
+    fn len(&self) -> usize {
+        self.collection.len()
+    }
+}
+
+impl<'a> IntoIterator for &'a DenseBitSet {
+    type Item = bool;
+    type IntoIter = DenseBitIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        DenseBitIterator {
+            collection: &self,
+            index: 0
+        }
+    }
+}
+
 // DenseBitSet TESTS
 mod tests {
     
@@ -417,5 +461,24 @@ mod tests {
         bs.inplace_not();
 
         assert_eq!(sb, bs);
+    }
+
+    #[test]
+    fn iter_bits() {
+        let bit_pattern: usize = 0b00110100;
+        let bs = DenseBitSet::from_bits(bit_pattern);
+        let expected_values: Vec<bool> = (0..BITS_PER_WORD).map(|i| if (bit_pattern >> i) & 0x01 != 0 { true } else { false }).collect();
+
+        for (expected, bit_is_set) in expected_values.into_iter().zip(bs.into_iter()) {
+            assert_eq!(expected, bit_is_set);
+        }
+    }
+
+    #[test]
+    fn iter_bits_known_size() {
+        let bit_pattern: usize = 0b00111010;
+        let bs = DenseBitSet::from_bits(bit_pattern);
+
+        assert_eq!(bs.into_iter().len(), BITS_PER_WORD);
     }
 }
